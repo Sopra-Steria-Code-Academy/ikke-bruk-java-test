@@ -14,11 +14,11 @@ variables:
   # disabled by default, to avoid issues when not defined
   ENABLE_OAUTH_PROXY: "false"
   MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
-  image: maven:latest
+  MAVEN_IMAGE: maven:latest
 
 build:
   stage: build
-  image: ${image}
+  image: ${MAVEN_IMAGE}
   script:
     - cd "${PROJECT_ROOT_DIR}"
     #    - rm -Force target/*
@@ -35,7 +35,7 @@ build:
 
 sonarqube-check:
   stage: scan
-  image: maven:3.6.3-jdk-11
+  image: ${MAVEN_IMAGE}
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
     GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
