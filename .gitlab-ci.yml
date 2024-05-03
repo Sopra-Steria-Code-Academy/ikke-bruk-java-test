@@ -5,8 +5,8 @@ stages:
   - deploy
 
 variables:
-  SONAR_HOST_URL: $SONAR_HOST_URL
-  SONAR_LOGIN: $SONAR_LOGIN
+  SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
+  SONAR_LOGIN: "sqp_99f0e2587cb7435d2bd584833af22ca668cff076"
   PROJ_FILE_PATH: "pom.xml"
   SONAR_SCANNER_OPTIONS: |
     -Dsonar.dependencyCheck.xmlReportPath=dependency-check/dependency-check-report.xml
