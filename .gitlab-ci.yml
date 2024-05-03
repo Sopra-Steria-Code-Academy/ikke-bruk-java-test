@@ -7,6 +7,11 @@ stages:
 variables:
   SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
   SONAR_LOGIN: "sqp_99f0e2587cb7435d2bd584833af22ca668cff076"
+  PROJ_FILE_PATH: "pom.xml"
+  SONAR_SCANNER_OPTIONS: |
+    -Dsonar.dependencyCheck.xmlReportPath=dependency-check/dependency-check-report.xml
+    -Dsonar.dependencyCheck.jsonReportPath=dependency-check/dependency-check-report.json
+    -Dsonar.dependencyCheck.htmlReportPath=dependency-check/dependency-check-report.html
   OAUTH_PROXY_IMAGE_TAG: "v7-update1"
   # disabled by default, to avoid issues when not defined
   ENABLE_OAUTH_PROXY: "false"
@@ -29,6 +34,35 @@ build:
   artifacts:
     paths:
       - $PROJECT_ROOT_DIR/target/*.jar
+
+sonarqube:
+  #doing this in a second analysis stage to have the dependency-check artifacts ready to be uploaded to Sonarqube
+  stage: scan
+  image: ${MAVEN_IMAGE}
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+    SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
+    SONAR_LOGIN: "sqp_99f0e2587cb7435d2bd584833af22ca668cff076"
+  script:
+    - mvn verify sonar:sonar -Dsonar.projectKey=CodeAcademySamling2Java \
+      -Dstyle.color=always \
+      -s settings.xml \
+      -Dsonar.host.url=${SONAR_HOST_URL} \
+      -Dsonar.login=${SONAR_LOGIN} \
+      -Dsonar.qualitygate.wait=true \
+      ${ANALYSIS_OPTIONS} \
+      ${SONAR_SCANNER_OPTIONS} \
+      ${JAVA_OPTS}
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - develop
 
 sonarqube-check:
   stage: scan
