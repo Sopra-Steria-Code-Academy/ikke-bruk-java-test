@@ -46,6 +46,8 @@ sonarqube:
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
     GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+    SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
+    SONAR_LOGIN: "sqp_99f0e2587cb7435d2bd584833af22ca668cff076"
   script:
     - mvn verify sonar:sonar -Dsonar.projectKey=CodeAcademySamling2Java \
       -Dstyle.color=always \
