@@ -54,7 +54,7 @@ sonarqube-check:
     - develop
 owasp_dependency_check:
   stage: scan
-  image: registry.gitlab.com/acme/containers/owasp-dependency-check:latest
+  image: ${MAVEN_IMAGE}
   script:
     - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8
   artifacts:
