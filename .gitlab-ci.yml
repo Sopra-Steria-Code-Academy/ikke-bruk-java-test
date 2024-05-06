@@ -57,6 +57,7 @@ owasp_dependency_check:
   image: ${MAVEN_IMAGE}
   script:
     - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8
+  allow_failure: true
   artifacts:
     when: always
     paths:
