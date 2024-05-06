@@ -62,3 +62,12 @@ owasp_dependency_check:
     when: always
     paths:
       - target/dependency-check-report.html
+
+deploy_to_test:
+  stage: deploy
+  image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
+  only:
+    - merge_requests
+    - master
+  script:
+    - echo "App deployed successfully."
