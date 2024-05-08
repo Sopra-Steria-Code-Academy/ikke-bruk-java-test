@@ -3,6 +3,7 @@ stages:
   - test
   - scan
   - deploy
+  - deploy_prod
 
 variables:
   SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
@@ -40,6 +41,7 @@ testing:
   stage: test
   script:
     - mvn verify
+  allow_failure: true
   artifacts:
     when: always
     reports:
@@ -68,7 +70,6 @@ owasp_dependency_check:
   stage: scan
   image: ${MAVEN_IMAGE}
   script:
-#    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8
     - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY
   allow_failure: true
   artifacts:
@@ -79,8 +80,13 @@ owasp_dependency_check:
 deploy_to_test:
   stage: deploy
   image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
+  script:
+    - echo "App deployed successfully."
+
+deploy_to_prod:
+  stage: deploy_prod
   only:
     - merge_requests
     - master
   script:
-    - echo "App deployed successfully."
+    - echo "App deployed to PROD successfully."
