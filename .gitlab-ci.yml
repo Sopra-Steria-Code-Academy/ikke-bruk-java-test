@@ -108,7 +108,7 @@ terraform_plan:
   only:
     - merge_requests
     - master
-    - pipelines
+    - pipeline
 
 terraform_apply:
   stage: IaC
@@ -122,13 +122,14 @@ terraform_apply:
       - tfplan
   only:
     - master
-    - pipelines
+    - pipeline
 
 deploy_to_prod:
   stage: deploy_prod
   only:
     - merge_requests
     - master
+    - pipeline
   script:
         - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
         - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
