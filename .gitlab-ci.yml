@@ -36,6 +36,17 @@ build:
     paths:
       - $PROJECT_ROOT_DIR/target/*.jar
 
+testing:
+  stage: test
+  script:
+    - mvn verify
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
+
 sonarqube-check:
   stage: scan
   image: ${MAVEN_IMAGE}

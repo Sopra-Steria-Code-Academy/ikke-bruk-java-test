@@ -1,0 +1,9 @@
+services:
+  helloworld:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+networks:
+  default:
+    name: bwlt
