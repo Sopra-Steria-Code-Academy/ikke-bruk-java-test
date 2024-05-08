@@ -132,10 +132,6 @@ deploy_to_prod:
     - if: $CI_COMMIT_REF_SLUG == "master"
       when: manual
       allow_failure: true
-  only:
-    - merge_requests
-    - master
-    - pipeline
   script:
         - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
         - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
