@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - scan
+  - IaC
   - deploy
   - deploy_prod
 
@@ -19,6 +20,15 @@ variables:
   MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
   MAVEN_IMAGE: maven:latest
   OWASP_NVD_KEY: "bda53904-b2d7-4fea-96e7-a00d3f6addae"
+  AZURE_APP_NAME: 'CodeAcademyTestApp'
+  AZURE_RESOURCE_GROUP: 'TEST_DEV'
+  AZURE_LOCATION: 'norwayeast'
+  APP_PATH: $artifact_path'
+  AZURE_CLIENT_ID: '939d4d90-44bf-4d8b-9088-32f1c779a788'
+  AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
+  AZURE_TENANT_ID: '8b87af7d-8647-4dc7-8df4-5f69a2011bb5'
+  AZURE_SUBSCRIPTION_ID: 'e25e96db-c54e-4251-bed2-5d7a3e52fc4e'
+
 
 build:
   stage: build
@@ -83,10 +93,46 @@ deploy_to_test:
   script:
     - echo "App deployed successfully."
 
+terraform_plan:
+  stage: IaC
+  image: hashicorp/terraform:latest
+  script:
+    - "cd Terraform"
+    - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
+    - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+    - "terraform init"
+    - "terraform plan -out=tfplan"
+  artifacts:
+    paths:
+      - tfplan
+  only:
+    - merge_requests
+    - master
+    - pipelines
+
+terraform_apply:
+  stage: IaC
+  image: hashicorp/terraform:latest
+  script:
+    - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
+    - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+    - "terraform apply tfplan"
+  artifacts:
+    paths:
+      - tfplan
+  only:
+    - master
+    - pipelines
+
 deploy_to_prod:
   stage: deploy_prod
   only:
     - merge_requests
     - master
   script:
-    - echo "App deployed to PROD successfully."
+        - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
+        - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+        - "dotnet publish CodeAcademy.csproj -c Release -o $APP_PATH"
+        - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --dryrun"
+        - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1"
+
