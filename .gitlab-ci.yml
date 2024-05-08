@@ -69,7 +69,7 @@ owasp_dependency_check:
   image: ${MAVEN_IMAGE}
   script:
 #    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8
-    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=bda53904-b2d7-4fea-96e7-a00d3f6addae
+    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY
   allow_failure: true
   artifacts:
     when: always
