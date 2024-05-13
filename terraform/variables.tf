@@ -14,3 +14,9 @@ variable "rg_location" {
   description = "Azure region for Right Cloud resources"
   default     = "West Europe"
 }
+
+variable "client_secret" {
+  type        = string
+  description = "The client secret for the service principal"
+  sensitive   = true
+}
