@@ -3,6 +3,7 @@ stages:
   - test
   - scan
   - IaC
+  - IaCApply
   - deploy
   - deploy_prod
 
@@ -96,13 +97,13 @@ deploy_to_test:
 terraform_plan:
   stage: IaC
   image: hashicorp/terraform:latest
-  allow_failure: true
   script:
-    - "cd terraform"
-    - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-    - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+    - "cd Terraform"
+    - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
     - "terraform init"
     - "terraform plan -out=tfplan"
+
+  allow_failure: true
   artifacts:
     paths:
       - tfplan
@@ -112,12 +113,11 @@ terraform_plan:
     - pipeline
 
 terraform_apply:
-  stage: IaC
+  stage: IaCApply
   image: hashicorp/terraform:latest
-  allow_failure: true
   script:
-    - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-    - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+    - "cd Terraform"
+    - "terraform init"
     - "terraform apply tfplan"
   artifacts:
     paths:
@@ -125,6 +125,9 @@ terraform_apply:
   only:
     - master
     - pipeline
+  dependencies:
+    - terraform_plan
+
 
 deploy_to_prod:
   stage: deploy_prod
