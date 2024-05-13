@@ -5,7 +5,6 @@ stages:
   - IaC
   - IaCApply
   - deploy
-  - deploy_prod
 
 variables:
   SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
@@ -123,15 +122,8 @@ build:
 #  dependencies:
 #    - terraform_plan
 
-deploy_to_test:
+deploy:
   stage: deploy
-  image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
-  script:
-    - echo "App deployed successfully."
-
-
-deploy_to_prod:
-  stage: deploy_prod
   rules:
     - if: $CI_COMMIT_REF_SLUG == "master"
       when: manual
@@ -142,6 +134,7 @@ deploy_to_prod:
   script:
         - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
         - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+        - "ls -la"
         - "mvn azure-webapp:deploy"
         - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --dryrun"
         - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1"
