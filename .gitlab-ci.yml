@@ -35,7 +35,7 @@ build:
   image: ${MAVEN_IMAGE}
   script:
     - cd "${PROJECT_ROOT_DIR}"
-    #    - rm -Force target/*
+    - mkdir target
     - mvn package -s settings.xml
   cache:
     # cache target folder for pipeline performances
