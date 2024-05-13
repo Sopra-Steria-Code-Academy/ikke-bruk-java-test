@@ -88,39 +88,40 @@ build:
 #    paths:
 #      - target/dependency-check-report.html
 
-terraform_plan:
-  stage: IaC
-  image: hashicorp/terraform:latest
-  script:
-    - "cd terraform"
-    - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
-    - "terraform init"
-    - "terraform plan -out=tfplan"
-
-  allow_failure: true
-  artifacts:
-    paths:
-      - ./terraform/tfplan
-  only:
-    - merge_requests
-    - master
-    - pipeline
-
-terraform_apply:
-  stage: IaCApply
-  image: hashicorp/terraform:latest
-  script:
-    - "cd terraform"
-    - "terraform init"
-    - "terraform apply tfplan"
-  artifacts:
-    paths:
-      - ./terraform/tfplan
-  only:
-    - master
-    - pipeline
-  dependencies:
-    - terraform_plan
+#terraform_plan:
+#  stage: IaC
+#  image: hashicorp/terraform:latest
+#  script:
+#    - "cd terraform"
+#    - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
+#    - "terraform init"
+#    - "terraform plan -out=tfplan"
+#
+#  allow_failure: true
+#  artifacts:
+#    paths:
+#      - ./terraform/tfplan
+#  only:
+#    - merge_requests
+#    - master
+#    - pipeline
+#
+#terraform_apply:
+#  stage: IaCApply
+#  image: hashicorp/terraform:latest
+#  allow_failure: true
+#  script:
+#    - "cd terraform"
+#    - "terraform init"
+#    - "terraform apply tfplan"
+#  artifacts:
+#    paths:
+#      - ./terraform/tfplan
+#  only:
+#    - master
+#    - pipeline
+#  dependencies:
+#    - terraform_plan
 
 deploy_to_test:
   stage: deploy
