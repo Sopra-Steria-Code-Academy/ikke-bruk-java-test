@@ -3,8 +3,7 @@ RUN apt-get update; apt-get install -y curl wget vim libfontconfig1
 
 COPY ./target/*.jar application.jar
 
-RUN mkdir /target
-COPY ./target /target
+COPY ./target/lib /lib
 
 RUN mkdir /terraform
 COPY ./terraform /terraform

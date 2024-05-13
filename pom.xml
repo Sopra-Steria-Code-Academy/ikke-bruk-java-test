@@ -16,6 +16,7 @@
         <java.version>17</java.version>
         <azure.version>2.13.0</azure.version>
         <lombok.version>1.18.32</lombok.version>
+        <maven.dependency.plugin.version>3.6.1</maven.dependency.plugin.version>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
     </properties>
     <dependencies>
@@ -81,6 +82,23 @@
                         <goals>
                             <goal>verify</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven.dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>compile</includeScope>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
