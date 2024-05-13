@@ -88,16 +88,11 @@ owasp_dependency_check:
     paths:
       - target/dependency-check-report.html
 
-deploy_to_test:
-  stage: deploy
-  image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
-  script:
-    - echo "App deployed successfully."
-
 terraform_plan:
   stage: IaC
   image: hashicorp/terraform:latest
   script:
+    - "ls -la"
     - "cd Terraform"
     - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
     - "terraform init"
@@ -127,6 +122,12 @@ terraform_apply:
     - pipeline
   dependencies:
     - terraform_plan
+
+deploy_to_test:
+  stage: deploy
+  image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
+  script:
+    - echo "App deployed successfully."
 
 
 deploy_to_prod:
