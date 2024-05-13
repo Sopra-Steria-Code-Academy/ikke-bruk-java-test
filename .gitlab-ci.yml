@@ -36,16 +36,16 @@ build:
   script:
     - cd "${PROJECT_ROOT_DIR}"
     - mkdir target
-    - mvn package -s settings.xml
+    - mvn package
   cache:
     # cache target folder for pipeline performances
     policy: pull-push
     untracked: false
     paths:
-      - $PROJECT_ROOT_DIR/target/
+      - $PROJECT_ROOT_DIR/target
   artifacts:
     paths:
-      - $PROJECT_ROOT_DIR/target/*.jar
+      - /target/*.jar
 
 #testing:
 #  stage: test
