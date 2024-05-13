@@ -100,7 +100,7 @@ terraform_plan:
   allow_failure: true
   artifacts:
     paths:
-      - ./CodeAcademy/Terraform/tfplan
+      - ./terraform/tfplan
   only:
     - merge_requests
     - master
@@ -115,7 +115,7 @@ terraform_apply:
     - "terraform apply tfplan"
   artifacts:
     paths:
-      - ./CodeAcademy/Terraform/tfplan
+      - ./terraform/tfplan
   only:
     - master
     - pipeline
