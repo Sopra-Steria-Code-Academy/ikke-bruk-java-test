@@ -6,7 +6,7 @@ variable "environment" {
 variable "rg_name" {
   type        = string
   description = "The resource group name"
-  default     = "rc-devops-customerportal-api"
+  default     = "rc-codeacademy-example"
 }
 
 variable "rg_location" {
