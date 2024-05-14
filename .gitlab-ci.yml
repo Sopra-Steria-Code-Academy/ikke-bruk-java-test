@@ -96,14 +96,13 @@ terraform_plan:
   image: hashicorp/terraform:latest
   script:
     - "cd terraform"
-#    - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
     - "terraform init"
-    - "terraform plan -out=tfplan"
+    - "terraform plan -out=tfplanjava"
 
   allow_failure: true
   artifacts:
     paths:
-      - ./terraform/tfplan
+      - ./terraform/tfplanjava
   only:
     - merge_requests
     - master
@@ -116,10 +115,10 @@ terraform_apply:
   script:
     - "cd terraform"
     - "terraform init"
-    - "terraform apply tfplan"
+    - "terraform apply tfplanjava"
   artifacts:
     paths:
-      - ./terraform/tfplan
+      - ./terraform/tfplanjava
   only:
     - master
     - pipeline
