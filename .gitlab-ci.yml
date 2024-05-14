@@ -138,6 +138,5 @@ deploy:
         - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
         - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
         - "mvn azure-webapp:deploy"
-        - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --dryrun"
         - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1"
 
