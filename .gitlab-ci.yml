@@ -58,7 +58,7 @@ testing:
     when: always
     reports:
       junit:
-        - target/failsafe-*.xml
+        - target/failsafe-reports/failsafe-*.xml
 
 sonarqube-check:
   stage: scan
