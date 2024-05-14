@@ -58,10 +58,7 @@ testing:
     when: always
     reports:
       junit:
-        - target/surefire-reports/TEST-*.xml
-        - target/failsafe-reports/TEST-*.xml
-  dependencies:
-    - build
+        - target/failsafe-*.xml
 
 sonarqube-check:
   stage: scan
@@ -80,11 +77,12 @@ sonarqube-check:
     - merge_requests
     - master
     - develop
+
 owasp_dependency_check:
   stage: scan
   image: ${MAVEN_IMAGE}
   script:
-    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY
+    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY -DnvdApiDelay=5000
   allow_failure: true
   artifacts:
     when: always
