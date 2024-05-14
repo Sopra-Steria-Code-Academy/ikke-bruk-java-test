@@ -48,81 +48,81 @@ build:
     expire_in: 5 hour
     paths:
       - "target"
-#
-#testing:
-#  stage: test
-#  script:
-#    - mvn verify
-#  allow_failure: true
-#  artifacts:
-#    when: always
-#    reports:
-#      junit:
-#        - target/surefire-reports/TEST-*.xml
-#        - target/failsafe-reports/TEST-*.xml
-#
-#sonarqube-check:
-#  stage: scan
-#  image: ${MAVEN_IMAGE}
-#  variables:
-#    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-#    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-#  cache:
-#    key: "${CI_JOB_NAME}"
-#    paths:
-#      - .sonar/cache
-#  script:
-#    - mvn verify sonar:sonar -Dsonar.projectKey=CodeAcademySamling2Java
-#  allow_failure: true
-#  only:
-#    - merge_requests
-#    - master
-#    - develop
-#owasp_dependency_check:
-#  stage: scan
-#  image: ${MAVEN_IMAGE}
-#  script:
-#    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY
-#  allow_failure: true
-#  artifacts:
-#    when: always
-#    paths:
-#      - target/dependency-check-report.html
-#
-#terraform_plan:
-#  stage: IaC
-#  image: hashicorp/terraform:latest
-#  script:
-#    - "cd terraform"
-##    - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
-#    - "terraform init"
-#    - "terraform plan -out=tfplan"
-#
-#  allow_failure: true
-#  artifacts:
-#    paths:
-#      - ./terraform/tfplan
-#  only:
-#    - merge_requests
-#    - master
-#    - pipeline
-#
-#terraform_apply:
-#  stage: IaCApply
-#  image: hashicorp/terraform:latest
-#  allow_failure: true
-#  script:
-#    - "cd terraform"
-#    - "terraform init"
-#    - "terraform apply tfplan"
-#  artifacts:
-#    paths:
-#      - ./terraform/tfplan
-#  only:
-#    - master
-#    - pipeline
-#  dependencies:
-#    - terraform_plan
+
+testing:
+  stage: test
+  script:
+    - mvn verify
+  allow_failure: true
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
+
+sonarqube-check:
+  stage: scan
+  image: ${MAVEN_IMAGE}
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - mvn verify sonar:sonar -Dsonar.projectKey=CodeAcademySamling2Java
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - develop
+owasp_dependency_check:
+  stage: scan
+  image: ${MAVEN_IMAGE}
+  script:
+    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - target/dependency-check-report.html
+
+terraform_plan:
+  stage: IaC
+  image: hashicorp/terraform:latest
+  script:
+    - "cd terraform"
+#    - set "TF_VAR_client_secret=$AZURE_CLIENT_SECRET"
+    - "terraform init"
+    - "terraform plan -out=tfplan"
+
+  allow_failure: true
+  artifacts:
+    paths:
+      - ./terraform/tfplan
+  only:
+    - merge_requests
+    - master
+    - pipeline
+
+terraform_apply:
+  stage: IaCApply
+  image: hashicorp/terraform:latest
+  allow_failure: true
+  script:
+    - "cd terraform"
+    - "terraform init"
+    - "terraform apply tfplan"
+  artifacts:
+    paths:
+      - ./terraform/tfplan
+  only:
+    - master
+    - pipeline
+  dependencies:
+    - terraform_plan
 
 deploy:
   stage: deploy
