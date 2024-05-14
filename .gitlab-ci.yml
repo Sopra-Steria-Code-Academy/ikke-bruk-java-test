@@ -60,6 +60,8 @@ testing:
       junit:
         - target/surefire-reports/TEST-*.xml
         - target/failsafe-reports/TEST-*.xml
+  dependencies:
+    - build
 
 sonarqube-check:
   stage: scan
