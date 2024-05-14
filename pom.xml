@@ -114,7 +114,7 @@
                     <region>norwayeast</region>
                     <subscriptionId>e25e96db-c54e-4251-bed2-5d7a3e52fc4e</subscriptionId>
                     <runtime>
-                        <os>Linux</os>
+                        <os>Windows</os>
                         <javaVersion>Java 17</javaVersion>
                     </runtime>
                     <deployment>
