@@ -76,7 +76,7 @@ sonarqube-check:
   only:
     - merge_requests
     - master
-    - develop
+    - pipeline
 
 owasp_dependency_check:
   stage: scan
