@@ -51,6 +51,7 @@ build:
 
 testing:
   stage: test
+  image: ${MAVEN_IMAGE}
   script:
     - mvn verify
   allow_failure: true
