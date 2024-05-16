@@ -1,0 +1,142 @@
+stages:
+  - build
+  - test
+  - scan
+  - IaC
+  - IaCApply
+  - deploy
+
+variables:
+  SONAR_HOST_URL: "https://sonarqube-code-academy-sonarqube2.apps.cicd.arcus.soprasteria.com"
+  SONAR_LOGIN: "sqp_99f0e2587cb7435d2bd584833af22ca668cff076"
+  PROJ_FILE_PATH: "pom.xml"
+  SONAR_SCANNER_OPTIONS: |
+    -Dsonar.dependencyCheck.xmlReportPath=dependency-check/dependency-check-report.xml
+    -Dsonar.dependencyCheck.jsonReportPath=dependency-check/dependency-check-report.json
+    -Dsonar.dependencyCheck.htmlReportPath=dependency-check/dependency-check-report.html
+  OAUTH_PROXY_IMAGE_TAG: "v7-update1"
+  # disabled by default, to avoid issues when not defined
+  ENABLE_OAUTH_PROXY: "false"
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+  MAVEN_IMAGE: maven:latest
+  OWASP_NVD_KEY: "bda53904-b2d7-4fea-96e7-a00d3f6addae"
+  AZURE_APP_NAME: 'CodeAcademyTestJava'
+  AZURE_RESOURCE_GROUP: 'TEST_DEV'
+  AZURE_LOCATION: 'norwayeast'
+  APP_PATH: $artifact_path'
+  AZURE_CLIENT_ID: '939d4d90-44bf-4d8b-9088-32f1c779a788'
+  AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
+  AZURE_TENANT_ID: '8b87af7d-8647-4dc7-8df4-5f69a2011bb5'
+  AZURE_SUBSCRIPTION_ID: 'e25e96db-c54e-4251-bed2-5d7a3e52fc4e'
+
+
+build:
+  stage: build
+  image: ${MAVEN_IMAGE}
+  script:
+    - cd "${PROJECT_ROOT_DIR}"
+    - mkdir target
+    - mvn package
+  cache:
+    # cache target folder for pipeline performances
+    policy: pull-push
+    untracked: false
+    paths:
+      - $PROJECT_ROOT_DIR/target
+  artifacts:
+    when: always
+    expire_in: 5 hour
+    paths:
+      - "target"
+
+testing:
+  stage: test
+  image: ${MAVEN_IMAGE}
+  script:
+    - mvn verify
+  allow_failure: true
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - target/failsafe-reports/failsafe-*.xml
+
+sonarqube-check:
+  stage: scan
+  image: ${MAVEN_IMAGE}
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - mvn verify sonar:sonar -Dsonar.projectKey=CodeAcademySamling2Java
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - pipeline
+
+owasp_dependency_check:
+  stage: scan
+  image: ${MAVEN_IMAGE}
+  script:
+    - mvn org.owasp:dependency-check-maven:check -DdataDirectory=/owasp -DfailBuildOnCVSS=8 -DnvdApiKey=$OWASP_NVD_KEY -DnvdApiDelay=5000
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - target/dependency-check-report.html
+
+terraform_plan:
+  stage: IaC
+  image: hashicorp/terraform:latest
+  script:
+    - "cd terraform"
+    - "terraform init"
+    - "terraform plan -out=tfplanjava"
+
+  allow_failure: true
+  artifacts:
+    paths:
+      - ./terraform/tfplanjava
+  only:
+    - merge_requests
+    - master
+    - pipeline
+
+terraform_apply:
+  stage: IaCApply
+  image: hashicorp/terraform:latest
+  allow_failure: true
+  script:
+    - "cd terraform"
+    - "terraform init"
+    - "terraform apply tfplanjava"
+  artifacts:
+    paths:
+      - ./terraform/tfplanjava
+  only:
+    - master
+    - pipeline
+  dependencies:
+    - terraform_plan
+
+deploy:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_REF_SLUG == "master"
+      when: manual
+      allow_failure: true
+    - if: $CI_COMMIT_REF_SLUG == "pipeline"
+      when: always
+  dependencies:
+      - build
+  script:
+        - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
+        - "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+        - "mvn azure-webapp:deploy"
+        - "az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'"
+
