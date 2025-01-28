@@ -15,6 +15,8 @@ on:
     branches: [ "master" ]
 permissions:
   contents: write
+env:
+  AZURE_CLIENT_ID: '939d4d90-44bf-4d8b-9088-32f1c779a788'
 jobs:
   build:
     name: Package
@@ -33,6 +35,14 @@ jobs:
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@4f64ddab9d742a4806eeb588d238e4c311a8397d
+
+  azure-login:
+    name: Login to Azure Container Registry
+    uses: azure/docker-login@v1
+    with:
+      username: $AZURE_CLIENT_ID
+      password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
   dependency-scanner:
     name: Sonar
     runs-on: ubuntu-latest
