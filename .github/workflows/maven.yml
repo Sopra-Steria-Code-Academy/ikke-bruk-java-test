@@ -38,10 +38,12 @@ jobs:
 
   azure-login:
     name: Login to Azure Container Registry
-    uses: azure/docker-login@v1
-    with:
-      username: $AZURE_CLIENT_ID
-      password: ${{ secrets.AZURE_CLIENT_SECRET }}
+    runs-on: ubuntu-latest
+    steps:
+    -  uses: azure/docker-login@v2
+       with:
+         username: $AZURE_CLIENT_ID
+         password: ${{ secrets.AZURE_CLIENT_SECRET }}
 
   dependency-scanner:
     name: Sonar
