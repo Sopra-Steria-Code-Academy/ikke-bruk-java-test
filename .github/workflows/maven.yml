@@ -57,7 +57,7 @@ jobs:
           password: ${{ secrets.AZURE_CLIENT_SECRET }}
           subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
           tenant: $AZURE_TENANT_ID
-        run: mvn azure-webapp:deploy
+          inlineScript: mvn azure-webapp:deploy
 
 #  publish:
 #    name: Publish til azure
