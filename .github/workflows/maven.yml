@@ -58,19 +58,19 @@ jobs:
             az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
             az account show
             az storage -h
-      - uses: azure/CLI@v2
+      - uses: azure/docker-login@v2
       - name: Deploy with maven
         run: mvn azure-webapp:deploy
 
-  publish:
-    name: Publish til azure
-    runs-on: ubuntu-latest
-    steps:
-      - uses: azure/docker-login@v2
-      - name: Deploy it
-        shell: pwsh
-        run: |
-          az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
-          az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-          mvn azure-webapp:deploy
-          az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
+#  publish:
+#    name: Publish til azure
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: azure/docker-login@v2
+#      - name: Deploy it
+#        shell: pwsh
+#        run: |
+#          az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
+#          az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+#          mvn azure-webapp:deploy
+#          az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
