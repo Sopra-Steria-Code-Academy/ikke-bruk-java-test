@@ -45,21 +45,18 @@ jobs:
     name: Login to Azure Container Registry
     runs-on: ubuntu-latest
     steps:
-      - uses: azure/docker-login@v2
-        with:
-          username: $AZURE_CLIENT_ID
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
-          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
       - name: Azure CLI script
         uses: azure/CLI@v2
         with:
           azcliversion: 2.1.0
           inlineScript: |
             az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
-            az account show
-            az storage -h
       - uses: azure/docker-login@v2
-      - name: Deploy with maven
+        with:
+          username: $AZURE_CLIENT_ID
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+          tenant: $AZURE_TENANT_ID
         run: mvn azure-webapp:deploy
 
 #  publish:
