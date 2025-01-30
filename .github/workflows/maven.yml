@@ -56,9 +56,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: azure/docker-login@v2
-        with:
-          username: $AZURE_CLIENT_ID
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
       - name: Deploy it
         shell: pwsh
         run: |
