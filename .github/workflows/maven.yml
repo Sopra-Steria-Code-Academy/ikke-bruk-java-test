@@ -58,7 +58,9 @@ jobs:
             az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
             az account show
             az storage -h
-            mvn azure-webapp:deploy
+      - uses: azure/CLI@v2
+      - name: Deploy with maven
+        run: mvn azure-webapp:deploy
 
   publish:
     name: Publish til azure
