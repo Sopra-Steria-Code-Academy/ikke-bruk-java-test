@@ -22,6 +22,7 @@ env:
   AZURE_LOCATION: 'norwayeast'
   AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
   AZURE_TENANT_ID: '8b87af7d-8647-4dc7-8df4-5f69a2011bb5'
+  AZURE_SERVICE_PRINCIPAL: 'TODO'
 jobs:
   build:
     name: Package
@@ -51,14 +52,21 @@ jobs:
           azcliversion: 2.1.0
           inlineScript: |
             az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
-      - uses: azure/docker-login@v2
+            az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+#      - uses: azure/docker-login@v2
+#        with:
+#          username: $AZURE_CLIENT_ID
+#          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+#          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+#          tenant: $AZURE_TENANT_ID
+#          inlineScript: |
+#            mvn azure-webapp:deploy
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
         with:
-          username: $AZURE_CLIENT_ID
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
-          subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
-          tenant: $AZURE_TENANT_ID
-          inlineScript: |
-            mvn azure-webapp:deploy
+          app-name: $AZURE_APP_NAME
+          publish-profile: $AZURE_SERVICE_PRINCIPAL
 
 #  publish:
 #    name: Publish til azure
