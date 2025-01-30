@@ -49,9 +49,6 @@ jobs:
     name: Deploy til azure
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Get code
-
       - name: Deploy it
         shell: pwsh
         run: |
