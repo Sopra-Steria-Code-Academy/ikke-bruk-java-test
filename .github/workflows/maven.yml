@@ -22,7 +22,6 @@ env:
   AZURE_LOCATION: 'norwayeast'
   AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
   AZURE_TENANT_ID: '8b87af7d-8647-4dc7-8df4-5f69a2011bb5'
-  AZURE_SUBSCRIPTION_ID: $AZURE_SUBSCRIPTION_ID
 jobs:
   build:
     name: Package
@@ -60,6 +59,6 @@ jobs:
         shell: pwsh
         run: |
           az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
-          az account set --subscription $AZURE_SUBSCRIPTION_ID
+          az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
           mvn azure-webapp:deploy
           az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
