@@ -44,3 +44,18 @@ jobs:
        with:
          username: $AZURE_CLIENT_ID
          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+  deploy:
+    name: Deploy til azure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get code
+
+      - name: Deploy it
+        shell: pwsh
+        run: |
+          az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
+          az account set --subscription $AZURE_SUBSCRIPTION_ID
+          mvn azure-webapp:deploy
+          az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
