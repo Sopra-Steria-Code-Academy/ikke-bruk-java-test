@@ -53,7 +53,20 @@ jobs:
             echo $AZURE_SERVICE_PRINCIPAL
             az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
             az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-            mvn azure-webapp:deploy
+            az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
+      - name: Maven
+        uses: azure/docker-login@v2
+        shell: pwsh
+        run: mvn azure-webapp:deploy
+
+      - name: Azure CLI script
+        uses: azure/CLI@v2
+        with:
+          azcliversion: 2.1.0
+          inlineScript: |
+            echo $AZURE_SERVICE_PRINCIPAL
+            az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
+            az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
             az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
 
 #      - name: Deploy to Azure Web App
