@@ -1,28 +1,21 @@
-name: Terraform Plan and Apply
+name: Terraform Drift Detection Pipeline
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - '**/terraform/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - '**/terraform/**'
+  schedule:
+    - cron: 0 6 * * * # every night at 6:00 am
   workflow_dispatch:
 
 #Special permissions required for OIDC authentication
 permissions:
   id-token: write
   contents: read
-  pull-requests: write
+  issues: write
 
 jobs:
-  terraform-plan-apply-test:
+  terraform-drift-test:
     name: "Test"
-    uses: "Sopra-Steria-Code-Academy/Samling-1-Templates/.github/workflows/terraform-plan-apply-template.yml@main"
+    #uses: "TestOrg/TestRepository/.github/workflows/terraform-drift-template.yml@main"
+    uses: "Sopra-Steria-Code-Academy/Samling-1-Templates/.github/workflows/terraform-drift-template.yml"
     with:
       environment-name: 'test'
     secrets:
