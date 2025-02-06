@@ -22,7 +22,6 @@ env:
   AZURE_LOCATION: 'norwayeast'
   AZURE_CLIENT_SECRET: $AZURE_CLIENT_SECRET
   AZURE_TENANT_ID: '8b87af7d-8647-4dc7-8df4-5f69a2011bb5'
-  AZURE_SERVICE_PRINCIPAL: '<publishData><publishProfile profileName="CodeAcademyTestJava - Web Deploy" publishMethod="MSDeploy" publishUrl="codeacademytestjava.scm.azurewebsites.net:443" msdeploySite="CodeAcademyTestJava" userName="$CodeAcademyTestJava" userPWD="1yRxj1qfcfEjeG0u149cKMu6XlcmqRJbvsKv4ixSi2pqtgrWqlbq7zP8CB1R" destinationAppUrl="https://codeacademytestjava.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="CodeAcademyTestJava - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-osl-015.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="CodeAcademyTestJava\$CodeAcademyTestJava" userPWD="1yRxj1qfcfEjeG0u149cKMu6XlcmqRJbvsKv4ixSi2pqtgrWqlbq7zP8CB1R" destinationAppUrl="https://codeacademytestjava.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="CodeAcademyTestJava - Zip Deploy" publishMethod="ZipDeploy" publishUrl="codeacademytestjava.scm.azurewebsites.net:443" userName="$CodeAcademyTestJava" userPWD="1yRxj1qfcfEjeG0u149cKMu6XlcmqRJbvsKv4ixSi2pqtgrWqlbq7zP8CB1R" destinationAppUrl="https://codeacademytestjava.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="https://portal.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>'
 jobs:
   build:
     name: Package
@@ -67,7 +66,7 @@ jobs:
         id: deploy-to-webapp
         with:
           app-name: $AZURE_APP_NAME
-          publish-profile: $AZURE_SERVICE_PRINCIPAL
+          publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE}}
 
 #  publish:
 #    name: Publish til azure
