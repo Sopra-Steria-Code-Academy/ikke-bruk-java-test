@@ -55,7 +55,6 @@ jobs:
             az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
             az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
       - name: Maven
-        uses: azure/docker-login@v2
         shell: pwsh
         run: mvn azure-webapp:deploy
 
