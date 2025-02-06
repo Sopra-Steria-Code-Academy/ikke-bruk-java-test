@@ -53,14 +53,16 @@ jobs:
             echo $AZURE_SERVICE_PRINCIPAL
             az login --service-principal -u $AZURE_CLIENT_ID -p ${{secrets.AZURE_CLIENT_SECRET}} --tenant $AZURE_TENANT_ID
             az account set --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+            mvn azure-webapp:deploy
+            az webapp up --name $AZURE_APP_NAME --resource-group $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION --sku B1 --runtime 'java:17:Java SE:17'
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: $AZURE_APP_NAME
-          slot-name: production
-          package: .
-          publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE}}
+#      - name: Deploy to Azure Web App
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: $AZURE_APP_NAME
+#          slot-name: production
+#          package: .
+#          publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE}}
 
 #  publish:
 #    name: Publish til azure
