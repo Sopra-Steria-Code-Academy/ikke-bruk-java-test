@@ -17,6 +17,6 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: ["java"] # Adjust languages as needed
+          languages: 'java' # Adjust languages as needed
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
