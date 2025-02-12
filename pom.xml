@@ -20,6 +20,7 @@
         <maven.dependency.plugin.version>3.6.1</maven.dependency.plugin.version>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
         <cyclonedx.version>2.9.1</cyclonedx.version>
+        <nvd.api.key>bda53904-b2d7-4fea-96e7-a00d3f6addae</nvd.api.key>
     </properties>
     <dependencies>
         <dependency>
@@ -166,20 +167,34 @@
                     </deployment>
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.owasp</groupId>-->
+<!--                <artifactId>dependency-check-maven</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <nvdApiKey>${nvd.api.key}</nvdApiKey>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <uniqueVersion>true</uniqueVersion>
-            <id>upload-maven-repository</id>
-            <name>Maven Releases</name>
-            <url>${env.UPLOAD_RELEASES_REPO_URL}</url>
-        </repository>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>upload-maven-repository</id>
-            <name>Maven Snapshots</name>
-            <url>${env.UPLOAD_SNAPSHOTS_REPO_URL}</url>
-        </snapshotRepository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <uniqueVersion>true</uniqueVersion>-->
+<!--            <id>upload-maven-repository</id>-->
+<!--            <name>Maven Releases</name>-->
+<!--            <url>${env.UPLOAD_RELEASES_REPO_URL}</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <uniqueVersion>false</uniqueVersion>-->
+<!--            <id>upload-maven-repository</id>-->
+<!--            <name>Maven Snapshots</name>-->
+<!--            <url>${env.UPLOAD_SNAPSHOTS_REPO_URL}</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
 </project>
