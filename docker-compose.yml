@@ -3,7 +3,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-
-networks:
-  default:
-    name: bwlt
+    ports:
+      - "28080:8080"
