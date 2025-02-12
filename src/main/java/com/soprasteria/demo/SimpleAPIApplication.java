@@ -16,8 +16,8 @@ public class SimpleAPIApplication {
         SpringApplication.run(SimpleAPIApplication.class, args);
     }
 
-    @RequestMapping(value = "/world", method = RequestMethod.GET, produces = "text/plain")
+    @GetMapping(value = "/world", produces = "text/plain")
     public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello Per Stian!!");
+        return ResponseEntity.ok("Hello .net noobs!!");
     }
 }
