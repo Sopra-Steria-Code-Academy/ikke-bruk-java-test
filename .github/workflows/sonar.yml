@@ -2,9 +2,9 @@ name: SonarQube
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master","instructor" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master","instructor" ]
 permissions:
   contents: write
 
