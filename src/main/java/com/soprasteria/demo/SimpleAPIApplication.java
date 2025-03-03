@@ -16,10 +16,11 @@ public class SimpleAPIApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SimpleAPIApplication.class, args);
+        System.out.println("Why can't dinosaurs clap their hands? Because they're extinct");
     }
 
     @GetMapping(value = "/world", produces = "text/plain")
     public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello .net noobs!!");
+        return ResponseEntity.ok("Who won the neck decorating contest? It was a tie.");
     }
 }

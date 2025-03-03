@@ -1,7 +1,15 @@
 services:
   helloworld:
+    container_name: "base"
+    image: <INSERT>:1.0.0
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "28080:8080"
+
+
+
+# docker builder prune --all
+# docker build -f Dockerfile .
+# docker system prune -a
